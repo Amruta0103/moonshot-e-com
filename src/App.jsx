@@ -4,7 +4,7 @@ import NavBar from './components/navbar';
 import Cart from './pages/cart';
 import ProductListing from './pages/product-listing';
 import Home from './pages/home';
-import ProductPage from './pages/product';
+import ProductPage from './pages/product-page';
 
 function App() {
   return (

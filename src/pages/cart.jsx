@@ -1,21 +1,77 @@
 import styled from "styled-components";
 import { useCart } from "../context/cartContext";
+import plus from "../assets/plus-solid.svg";
+import minus from '../assets/minus-solid.svg';
 
 const Cart = () => {
-  const {cartItem} = useCart()
-  console.log("ye hai cartItem", cartItem);
-  const Cart = styled.div`
-  margin:auto`
+  const {cartItem, setCartItem} = useCart()
 
+  return(
+    <CartBox>
+      <h3>Cart</h3>
+      {cartItem.length < 1 ? (
+        <h4>OOPS!! Cart is Empty</h4>
+      ):(
+        <CartList>
+        {cartItem.map((item) => (
+        <Card key={item.id}>
+          <CardImg src={item.image}/>
+          <CardTitle>{item.title}</CardTitle>
+          <CardInfo>{item.description}</CardInfo>
+          <PriceRatingBox>
+            <CardPrice>₹{item.price}</CardPrice>
+            {/* <CardRating>{item.rating}</CardRating> */}
+          </PriceRatingBox> 
+        <ButtonsBox>
+                <button className="reducer-btns"
+                  onClick={()=>setCartItem((prevState) =>
+                    prevState.map((items) =>
+                      items.id === item.id
+                        ? { ...items, quantity: item.quantity + 1 }
+                        : items
+                    ))}
+                >
+                  <img style={{height: "15px"}} src={plus} alt="plus"></img>
+                </button>
+                <h5 style={{marginBlockStart: "0px", marginBlockEnd: "0", width: "1rem"}}>{item.quantity}</h5>
+                <button
+                  className= "reducer-btns"
+                  onClick={() => setCartItem((prevState) =>
+                    prevState.map((items) =>
+                      items.id === item.id
+                        ? { ...items, quantity: item.quantity - 1 }
+                        : items
+                    ))
+                  }
+                  disabled = {item.quantity === 1 ? true : false}
+                >
+                  <img style={{height: "15px"}} src={minus} alt="trash/minus"></img>
+                </button>
+              </ButtonsBox>
+        </Card>
+        ))}
+        </CartList>
+      )
+      }
+    </CartBox>
+  )
+}
+
+const CartBox = styled.div`
+  margin:auto
+  `
   const CartList = styled.div`
-  margin: 5rem auto auto 5rem;
+  margin:auto;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   `
   const Card = styled.div`
   position: relative;
   height: 290px;
   width: 150px;
-  margin: 1rem;
+  margin: 3rem;
   padding: 0.5rem;
   text-align: center;
   font-size: 18px;
@@ -40,38 +96,18 @@ const Cart = () => {
   const PriceRatingBox = styled.div`
   display: flex;
   `
-  const CardRating = styled.div`
-  margin: auto;
-  `
+  // const CardRating = styled.div`
+  // margin: auto;
+  // `
   const CardPrice = styled.div`
   text-align: left;
   font-weight: 600;
   font-size: 22px;
   `
-
-  return(
-    <Cart>
-      <h3>Cart</h3>
-      {cartItem.length < 1 ? (
-        <h4>OOPS!! Cart is Empty</h4>
-      ):(
-        <CartList>
-        {cartItem.map((item) => (
-        <Card key={item.id}>
-          <CardImg src={item.image}/>
-          <CardTitle>{item.title}</CardTitle>
-          <CardInfo>{item.description}</CardInfo>
-          <PriceRatingBox>
-            <CardPrice>₹{item.price}</CardPrice>
-            <CardRating>{item.rating.rate}/{item.rating.count}</CardRating>
-          </PriceRatingBox> 
-        </Card>
-        ))}
-        </CartList>
-      )
-      }
-    </Cart>
-  )
-}
-
+  const ButtonsBox = styled.div`
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  `
 export default Cart;
